@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<form>
+    <h2>indi blog</h2>
+    <br>
+    <br>
+    <div>
+        {{post['subject']}}
+        {{post['created']}}
+        <hr>
+        <div>
+            {{post['content']}}
+        </div>
+    </div>
+    <br>
+    <br>
+</form>
+{%endblock%}

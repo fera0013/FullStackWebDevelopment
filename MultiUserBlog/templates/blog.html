@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<form>
+    <h2>CS253 blog</h2>
+    {% if posts %}
+    <br>
+    <br>
+    {%for post in posts%}
+        <br>
+        <br>
+        <div>
+            {{post['subject']}}
+            {{post['created']}}
+            <hr>
+            <div>
+                {{post['content']}}
+            </div>
+        </div>
+        <br>
+        <br>
+    {% endfor %}
+    {% endif %}
+</form>
+{%endblock%}
