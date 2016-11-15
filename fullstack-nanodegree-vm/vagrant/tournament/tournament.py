@@ -80,9 +80,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    clean_winner=bleach.clean(winner)
+    clean_loser=bleach.clean(loser)
     DB=connect()
     c=DB.cursor()
-    c.execute("INSERT INTO matches (winner,loser) VALUES ("+str(winner)+","+str(loser)+")")
+    c.execute("INSERT INTO matches (winner,loser) VALUES (%s, %s)",((clean_winner,),(clean_loser,)))
     DB.commit()
     DB.close()
  
