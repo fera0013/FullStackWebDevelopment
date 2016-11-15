@@ -13,12 +13,12 @@ CREATE DATABASE tournament;
  \c tournament
 
 CREATE TABLE players ( name TEXT,
-                     id SERIAL UNIQUE);
+                     id SERIAL PRIMARY KEY);
 
 -- Warning: this database structure doesn't consider draws
 CREATE TABLE matches ( winner INTEGER references players(id),
 	                   loser INTEGER references players(id),
-                       match_number SERIAL );
+                       match_number SERIAL PRIMARY KEY );
 
 CREATE VIEW win_table AS
 SELECT players.id, players.name, wins 
