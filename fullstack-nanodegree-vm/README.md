@@ -16,4 +16,4 @@ To run the code, follow these steps:
  - vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ \psql
  - vagrant=> \i tournament.sql
  - tournament=> \q
-7. run the tournament unit tests using the command $ python tournamen_test.py
+7. run the tournament unit tests using the command $ python tournament_test.py
