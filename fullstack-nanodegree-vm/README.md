@@ -12,5 +12,8 @@ To run the code, follow these steps:
 3. enter "vagrant up" to start the vagrant vm
 4. enter "vagrant ssh" to establish an ssh connection 
 5. cd into /vagrant/tournament
-6. run "python tournament_test.py"
-
+6. Create the project's database through the following sequence of commands:
+ - vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ \psql
+ - vagrant=> \i tournament.sql
+ - tournament=> \q
+7. run the tournament unit tests using the command $ python tournamen_test.py
