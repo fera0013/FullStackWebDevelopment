@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row jumbotron">
+    <div class="col-md-4">
+        <h2>Categories</h2>
+        {% for category in categories %}
+        <a href='{{url_for('Catalog', category_name = category.name) }}'>{{category.name}}</a>
+        {% endfor %}
+    </div>
+    <div class="col-md-8">
+        <h2>{{items[0].category.name}}</h2>
+        {% for item in items %}
+        <a href='{{url_for('Item',category_name=item.category.name, item_title = item.title) }}'>{{item.text}}</a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
