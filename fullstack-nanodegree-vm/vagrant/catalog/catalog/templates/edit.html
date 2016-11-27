@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-1 padding-top">
+        <form action="{{ url_for('Edit',item_title=item.title)}}" method="post">
+            <h2>Edit Item</h2>
+            <div class="form-group">
+                <label for="name">Title</label>
+                <input type='text'  maxlength="50" class="form-control" name='title' placeholder='{{item.title }}'>
+                <br />
+                <label for="description">Description</label>
+                <textarea class="form-control" name='description' rows='5' placeholder='{{item.description }}'></textarea>
+                <br />
+                <label for="category">Category</label>
+                <select class="form-control" name="category">
+                    {% for category in categories %}
+                    <option value={{category.name}}>{{category.name}}</option>
+                    {% endfor %}
+                </select>
+                <br />
+                <button type="submit" class="btn btn-default" id="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

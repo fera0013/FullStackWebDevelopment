@@ -1,6 +1,11 @@
 *.suo
+*.cfg
+fullstack-nanodegree-vm/vagrant/catalog/bin/AzureSetup.cfg
+*.exe
+fullstack-nanodegree-vm/vagrant/catalog/bin/Microsoft.PythonTools.WebRole.dll
 *.config
-MultiUserBlog/MultiUserBlog.pyproj
 *.sln
+fullstack-nanodegree-vm/vagrant/catalog/catalog/itemcatalog.db
 *.pyc
 *.pyproj
+fullstack-nanodegree-vm/vagrant/catalog/obj/Debug/attach_server.py

@@ -14,6 +14,13 @@ class Category(Base):
     __tablename__='category'
     name = Column(String(80),nullable=False,unique=True)
     id=Column(Integer,primary_key=True)
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
 
 class Item(Base):
     __tablename__='item'
@@ -21,10 +28,16 @@ class Item(Base):
     id=Column(Integer,primary_key=True)
     description=Column(String(250))
     cat_id=Column(Integer,ForeignKey('category.id'))
-    user=Column(String(80))
     created_date = Column(DateTime, default=datetime.utcnow)
     category=relationship(Category)
-   
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'title':self.title,
+            'id':self.id,
+            'description':self.description,
+            'cat_id':self.cat_id}
 
 class CatalogItemModel():
     def __init__(self):
@@ -63,19 +76,20 @@ class CatalogItemModel():
 
         shinguards = Item(category=soccer,
                           title="Shinguards",
-                          description="Something for the shins",
-                          user="Karl. E")
+                          description="Protects the shins")
         self.session.add(shinguards)
         self.session.commit()
         stick= Item(category=hockey,
                     title="Stick",
-                    description="Just a stick!",
-                    user="Franz Karl")
+                    description="A stick")
         self.session.add(stick)
         self.session.commit()
 
-    def get_categories(self): 
+    def get_categories(self):
         return self.session.query(Category).all()
+
+    def get_category(self,name):
+        return self.session.query(Category).filter_by(name=name).one()
 
     def get_items(self):
         return self.session.query(Item).all()
@@ -88,5 +102,13 @@ class CatalogItemModel():
         category = self.session.query(Category).filter_by(name=category_name).one()
         return self.session.query(Item).filter(Item.cat_id == category.id).all()
 
-    def get_item(self,item_text):
-        return self.session.query(Item).filter(Item.text == item_text).one()
+    def get_item(self,item_title):
+        return self.session.query(Item).filter(Item.title == item_title).one()
+    
+    def add_item(self,item):
+        self.session.add(item)
+        self.session.commit()
+
+    def delete_item(self,item):
+        self.session.delete(item)
+        self.session.commit()
