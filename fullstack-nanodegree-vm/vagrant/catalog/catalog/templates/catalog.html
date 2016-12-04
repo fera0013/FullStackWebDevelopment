@@ -20,5 +20,10 @@
             {% endfor %}
         {% endif %}
     </section>
+    {% if logged_in %}
+    <section class="row">
+        <a href="{{url_for('Add'}}" class="btn btn-info" role="button">Add item</a>
+    </section>
+    {% endif %}
 </section>
 {% endblock %}

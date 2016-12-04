@@ -9,7 +9,7 @@
             <br />
             <br />
         </section>
-        {% if logged_in %}
+        {% if authorized %}
         <section class="row">
             <a href="{{url_for('Edit', item_title = item.title) }}" class="btn btn-info" role="button">edit</a>
             <a href="{{url_for('Delete', item_title = item.title) }}" class="btn btn-info" role="button">delete</a>

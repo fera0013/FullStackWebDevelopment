@@ -22,14 +22,21 @@ class Category(Base):
             'id': self.id,
         }
 
+class User(Base):
+    __tablename__='user'
+    id = Column(Integer, primary_key=True)
+    email = Column(String,unique=True)
+
 class Item(Base):
     __tablename__='item'
     title=Column(String(80),nullable=False,unique=True)
     id=Column(Integer,primary_key=True)
     description=Column(String(250))
     cat_id=Column(Integer,ForeignKey('category.id'))
-    created_date = Column(DateTime, default=datetime.utcnow)
     category=relationship(Category)
+    created_date = Column(DateTime, default=datetime.utcnow)
+    user_id=Column(Integer,ForeignKey('user.id'))
+    user=relationship(User)
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -74,15 +81,28 @@ class CatalogItemModel():
         self.session.add(hockey)
         self.session.commit()
 
-        shinguards = Item(category=soccer,
-                          title="Shinguards",
-                          description="Protects the shins")
-        self.session.add(shinguards)
+        basketball = Category(name="Basketball")
+        self.session.add(basketball)
         self.session.commit()
-        stick= Item(category=hockey,
-                    title="Stick",
-                    description="A stick")
-        self.session.add(stick)
+
+        baseball = Category(name="Baseball")
+        self.session.add(baseball)
+        self.session.commit()
+
+        frisbee = Category(name="Frisbee")
+        self.session.add(frisbee)
+        self.session.commit()
+
+        snowboarding = Category(name="Snowboarding")
+        self.session.add(snowboarding)
+        self.session.commit()
+
+        rock_climbing = Category(name="Rock Climbing")
+        self.session.add(rock_climbing)
+        self.session.commit()
+
+        foosball = Category(name="Foosball")
+        self.session.add(foosball)
         self.session.commit()
 
     def get_categories(self):
@@ -108,7 +128,22 @@ class CatalogItemModel():
     def add_item(self,item):
         self.session.add(item)
         self.session.commit()
+        return item
 
     def delete_item(self,item):
         self.session.delete(item)
         self.session.commit()
+
+    def add_user(self,email_address):
+        """
+        Adds a user with email 'email_address' 
+        if user does not exist and returns new user
+        Otherwise returns existing user 
+        """
+        user= self.session.query(User).filter(User.email==email_address).all()
+        if len(user)>0:
+            return user[0]
+        user=User(email=email_address)
+        self.session.add(user)
+        self.session.commit()
+        return user

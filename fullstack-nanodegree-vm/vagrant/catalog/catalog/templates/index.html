@@ -14,10 +14,15 @@
         <h2>Latest Items</h2>
         {% for item in latest_items %}
         <section class="row">
-            <a href="" class="btn btn-link" role="button">{{item.title}} ({{item.category.name}})</a>
+            <a href="{{url_for('Item',category_name = item.category.name, item_title = item.title) }}" class="btn btn-link" role="button">{{item.title}} ({{item.category.name}})</a>
         </section>
         {% endfor %}
     </section>
 </section>
+{% if logged_in %}
+<section class="row">
+    <a href="{{url_for('Add')}}" class="btn btn-info" role="button">Add item</a>
+</section>
+{% endif %}
 {% endblock %}
 

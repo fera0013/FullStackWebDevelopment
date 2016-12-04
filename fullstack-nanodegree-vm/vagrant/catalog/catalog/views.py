@@ -113,6 +113,7 @@ def gconnect():
     print "done!"
     return output
 
+
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -173,9 +174,12 @@ def Catalog(category_name):
 @app.route('/catalog/<string:category_name>/<string:item_title>', methods=['GET', 'POST'])
 def Item(category_name,item_title):
     item=db.get_item(item_title)
+    logged_in='username' in login_session
+    authorized=('email' in login_session and item.user.email==login_session['email'])
     return render_template('item.html', 
                            item=item,
-                           logged_in='username' in login_session)
+                           logged_in=logged_in,
+                           authorized=authorized)
 
 @app.route('/catalog/<string:item_title>/edit', methods=['GET', 'POST'])
 def Edit(item_title):
@@ -185,7 +189,7 @@ def Edit(item_title):
         return render_template('edit.html',
                                categories=categories, 
                                item=item,
-                               logged_in='username' in login_session)
+                               route=url_for('Edit',item_title=item.title))
     else:
         if request.form['title']:
             item.text = request.form['title']
@@ -196,10 +200,33 @@ def Edit(item_title):
             category=db.get_category(category_name)
             item.category=category
         db.add_item(item)
-        return redirect(url_for('Item',
-                                category_name = item.category.name, 
-                                item_title = item.title))
+        return redirect(url_for('home'))
 
+@app.route('/catalog/add', methods=['GET', 'POST'])
+def Add():
+    if 'email' in login_session:
+        user_mail=login_session['email']
+    else:
+        return redirect(url_for('home'))
+    user=db.add_user(user_mail)
+    categories=db.get_categories()
+    item=model.Item(title='new item',category=categories[0],user= user)
+    if request.method == 'GET':
+        return render_template('edit.html',
+                               categories=categories, 
+                               item=item,
+                               route=url_for('Add',item_title=item.title))
+    else:
+        if request.form['title']:
+            item.title = request.form['title']
+        if request.form['description']:
+            item.description = request.form['description']
+        if request.form['category']:
+            category_name=request.form['category']
+            category=db.get_category(category_name)
+            item.category=category
+        db.add_item(item)
+        return redirect(url_for('home'))
 
 @app.route('/catalog/<string:item_title>/delete', methods=['GET', 'POST'])
 def Delete(item_title):
@@ -225,3 +252,4 @@ def CatalogJson():
         serialized_category['items'] = serializedItems
         serializedCategories.append(serialized_category)
     return jsonify(categories=serializedCategories)
+
