@@ -17,7 +17,7 @@ import json
 import requests
 
 db = model.CatalogItemModel()
-db.initialize()
+#db.initialize()
 state=''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
 app.secret_key=state
@@ -239,17 +239,18 @@ def Delete(item_title):
         db.delete_item(item)
         return redirect(url_for('home'))
 
-@app.route('/catalog.json')
-def CatalogJson():
-    categories=db.get_categories()
-    serializedCategories=[]
-    for category in categories:
-        serialized_category = category.serialize
-        items=db.get_items_of_category(category.name)
-        serializedItems = []
-        for item in items:
-            serializedItems.append(item.serialize)
-        serialized_category['items'] = serializedItems
-        serializedCategories.append(serialized_category)
-    return jsonify(categories=serializedCategories)
+@app.route('/catalog/<string:category_name>/json')
+def CategoryJson(category_name):
+    category=db.get_category(category_name)
+    serialized_category = category.serialize
+    items=db.get_items_of_category(category.name)
+    serializedItems = []
+    for item in items:
+        serializedItems.append(item.serialize)
+    serialized_category['items'] = serializedItems
+    return jsonify(category=serialized_category)
 
+@app.route('/catalog/<string:category_name>/<string:item_name>/json')
+def ItemJson(category_name,item_name):
+    item=db.get_item(item_name)
+    return jsonify(item=item.serialize)
