@@ -21,7 +21,9 @@
 </section>
 {% if logged_in %}
 <section class="row">
-    <a href="{{url_for('Add')}}" class="btn btn-info" role="button">Add item</a>
+    <section class="col-md-12 padding-top">
+        <a href="{{url_for('Add')}}" class="btn btn-info" role="button">Add item</a>
+    </section>
 </section>
 {% endif %}
 {% endblock %}
