@@ -64,9 +64,6 @@ class CatalogItemModel():
         # session.rollback()
         self.session = DBSession()
     def initialize(self):
-        #session.query(CatalogItem).delete()
-        #session.commit()
-        # Add catalog items
         [self.session.delete(item) for item in self.get_items()]
         self.session.commit()
 
@@ -135,11 +132,6 @@ class CatalogItemModel():
         self.session.commit()
 
     def add_user(self,email_address):
-        """
-        Adds a user with email 'email_address' 
-        if user does not exist and returns new user
-        Otherwise returns existing user 
-        """
         user= self.session.query(User).filter(User.email==email_address).all()
         if len(user)>0:
             return user[0]
