@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="row">
+    <section class="col-md-6 col-md-offset-1 padding-top">
+        <form action={{url_for('CreateCategory')}} method="post">
+            <h2>New Category</h2>
+            <section class="form-group">
+                <label for="name">Title</label>
+                <input type='text'  maxlength="50" class="form-control" name='name' placeholder='{{category.name }}'>
+                <br />
+                <button type="submit" class="btn btn-default" id="submit">Submit</button>
+            </section>
+        </form>
+    </section>
+</section>
+{% endblock %}

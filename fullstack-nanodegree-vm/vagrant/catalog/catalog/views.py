@@ -228,6 +228,23 @@ def Add():
         db.add_item(item)
         return redirect(url_for('home'))
 
+@app.route('/catalog/create_category', methods=['GET', 'POST'])
+def CreateCategory():
+    if 'email' in login_session:
+        user_mail=login_session['email']
+    else:
+        return redirect(url_for('home'))
+    user=db.add_user(user_mail)
+    category=model.Category(name='new category',user= user)
+    if request.method == 'GET':
+        return render_template('add_category.html',
+                               category=category)
+    else:
+        if request.form['name']:
+            category.name = request.form['name']
+        db.add_item(category)
+        return redirect(url_for('home'))
+
 @app.route('/catalog/<string:item_title>/delete', methods=['GET', 'POST'])
 def Delete(item_title):
     item=db.get_item(item_title)

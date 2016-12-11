@@ -10,10 +10,17 @@ from sqlalchemy.orm import sessionmaker
 
 Base=declarative_base()
 
+class User(Base):
+    __tablename__='user'
+    id = Column(Integer, primary_key=True)
+    email = Column(String,unique=True)
+
 class Category(Base):
     __tablename__='category'
     name = Column(String(80),nullable=False,unique=True)
     id=Column(Integer,primary_key=True)
+    user_id=Column(Integer,ForeignKey('user.id'))
+    user=relationship(User)
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -21,11 +28,6 @@ class Category(Base):
             'name': self.name,
             'id': self.id,
         }
-
-class User(Base):
-    __tablename__='user'
-    id = Column(Integer, primary_key=True)
-    email = Column(String,unique=True)
 
 class Item(Base):
     __tablename__='item'
@@ -70,37 +72,37 @@ class CatalogItemModel():
         [self.session.delete(item) for item in self.get_categories()]
         self.session.commit()
         
-        soccer = Category(name="Soccer")
-        self.session.add(soccer)
-        self.session.commit()
+        #soccer = Category(name="Soccer")
+        #self.session.add(soccer)
+        #self.session.commit()
 
-        hockey = Category(name="Hockey")
-        self.session.add(hockey)
-        self.session.commit()
+        #hockey = Category(name="Hockey")
+        #self.session.add(hockey)
+        #self.session.commit()
 
-        basketball = Category(name="Basketball")
-        self.session.add(basketball)
-        self.session.commit()
+        #basketball = Category(name="Basketball")
+        #self.session.add(basketball)
+        #self.session.commit()
 
-        baseball = Category(name="Baseball")
-        self.session.add(baseball)
-        self.session.commit()
+        #baseball = Category(name="Baseball")
+        #self.session.add(baseball)
+        #self.session.commit()
 
-        frisbee = Category(name="Frisbee")
-        self.session.add(frisbee)
-        self.session.commit()
+        #frisbee = Category(name="Frisbee")
+        #self.session.add(frisbee)
+        #self.session.commit()
 
-        snowboarding = Category(name="Snowboarding")
-        self.session.add(snowboarding)
-        self.session.commit()
+        #snowboarding = Category(name="Snowboarding")
+        #self.session.add(snowboarding)
+        #self.session.commit()
 
-        rock_climbing = Category(name="Rock Climbing")
-        self.session.add(rock_climbing)
-        self.session.commit()
+        #rock_climbing = Category(name="Rock Climbing")
+        #self.session.add(rock_climbing)
+        #self.session.commit()
 
-        foosball = Category(name="Foosball")
-        self.session.add(foosball)
-        self.session.commit()
+        #foosball = Category(name="Foosball")
+        #self.session.add(foosball)
+        #self.session.commit()
 
     def get_categories(self):
         return self.session.query(Category).all()

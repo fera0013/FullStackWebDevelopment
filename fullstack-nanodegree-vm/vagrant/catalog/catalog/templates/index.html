@@ -22,7 +22,10 @@
 {% if logged_in %}
 <section class="row">
     <section class="col-md-12 padding-top">
+        <a href="{{url_for('CreateCategory')}}" class="btn btn-info" role="button">Create category</a>
+        {% if categories|length>0 %}
         <a href="{{url_for('Add')}}" class="btn btn-info" role="button">Add item</a>
+        {% endif %}
     </section>
 </section>
 {% endif %}
