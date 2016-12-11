@@ -65,75 +65,91 @@ class CatalogItemModel():
         # revert all of them back to the last commit by calling
         # session.rollback()
         self.session = DBSession()
-    def initialize(self):
-        [self.session.delete(item) for item in self.get_items()]
-        self.session.commit()
-
-        [self.session.delete(item) for item in self.get_categories()]
-        self.session.commit()
-        
-        #soccer = Category(name="Soccer")
-        #self.session.add(soccer)
-        #self.session.commit()
-
-        #hockey = Category(name="Hockey")
-        #self.session.add(hockey)
-        #self.session.commit()
-
-        #basketball = Category(name="Basketball")
-        #self.session.add(basketball)
-        #self.session.commit()
-
-        #baseball = Category(name="Baseball")
-        #self.session.add(baseball)
-        #self.session.commit()
-
-        #frisbee = Category(name="Frisbee")
-        #self.session.add(frisbee)
-        #self.session.commit()
-
-        #snowboarding = Category(name="Snowboarding")
-        #self.session.add(snowboarding)
-        #self.session.commit()
-
-        #rock_climbing = Category(name="Rock Climbing")
-        #self.session.add(rock_climbing)
-        #self.session.commit()
-
-        #foosball = Category(name="Foosball")
-        #self.session.add(foosball)
-        #self.session.commit()
 
     def get_categories(self):
+        """
+        get_categories: returns a list with all categories
+        Args:
+            None
+        Returns:
+            list of Category objects
+        """
         return self.session.query(Category).all()
 
     def get_category(self,name):
+        """
+        get_category: Returns the Category object with name==name
+        Args:
+            name (data type: str): The categorie's name
+        Returns:
+            Category object 
+        """
         return self.session.query(Category).filter_by(name=name).one()
 
-    def get_items(self):
-        return self.session.query(Item).all()
-
     def get_latest_items(self,number_of_items):
+        """
+        get_latest_items: Returns the most recently added items
+        Args:
+            number_of_items (data type: int): The number of most recent items
+        Returns:
+            List of Item objects
+        """
         return self.session.query(Item).order_by(desc(Item.created_date)).limit(number_of_items)
 
     def get_items_of_category(self,category_name):
-        #There must be a better way to do this...
+        """
+        get_latest_items: Returns all items of a specific category
+        Args:
+            category_name (data type: str): The categorie's name
+        Returns:
+            List of Item objects
+        """
         category = self.session.query(Category).filter_by(name=category_name).one()
         return self.session.query(Item).filter(Item.cat_id == category.id).all()
 
     def get_item(self,item_title):
+        """
+        get_latest_items: Returns a specific item
+        Args:
+            item_title (data type: str): The item's title
+        Returns:
+            An item object
+        """
         return self.session.query(Item).filter(Item.title == item_title).one()
     
     def add_item(self,item):
+        """
+        add_item: Adds or updates a database object
+        Args:
+            item (data type: Base): A Category,Item or User object
+        Returns:
+            The added or updated item
+        """
         self.session.add(item)
         self.session.commit()
         return item
 
     def delete_item(self,item):
+        """
+        delete_item: Deletes a database object
+        Args:
+            item (data type: Base): A Category,Item or User object
+        Returns:
+            None
+        """
         self.session.delete(item)
         self.session.commit()
 
+    #ToDo: Verify email_address format
     def add_user(self,email_address):
+        """
+        add_user: Returns the user with email_address or adds a new one 
+                  if this user does not exist
+        Args:
+            email_address (data type: str): The email_address of a user
+        Returns:
+            A User object
+        """
         user= self.session.query(User).filter(User.email==email_address).all()
         if len(user)>0:
             return user[0]

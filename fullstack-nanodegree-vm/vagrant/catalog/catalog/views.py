@@ -17,19 +17,32 @@ import json
 import requests
 
 db = model.CatalogItemModel()
-#db.initialize()
 state=''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
 app.secret_key=state
 
-# Create anti-forgery state token
 @app.route('/login')
 def Login():
+    """
+    Login: Renders the login page
+    Args:
+        None
+    Returns:
+        html
+    """
     login_session['state'] = app.secret_key
     return render_template('login.html', STATE=state)
 
+
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """
+    gconnect: Handles the google login
+    Args:
+        None
+    Returns:
+        HTML displaying the results
+    """
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -117,6 +130,13 @@ def gconnect():
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
+    """
+    gdisconnect: Handles the google logout
+    Args:
+        None
+    Returns:
+        html
+    """
     access_token = login_session['access_token']
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: ' 
@@ -149,7 +169,13 @@ def gdisconnect():
 @app.route('/')
 @app.route('/home')
 def home():
-    """Renders the home page."""
+    """
+    home: Renders the homepage
+    Args:
+        None
+    Returns:
+        html
+    """
     categories=db.get_categories()
     latest_items=db.get_latest_items(2)
     return render_template(
@@ -164,6 +190,13 @@ def home():
 
 @app.route('/catalog/<string:category_name>/items', methods=['GET', 'POST'])
 def Catalog(category_name):
+    """
+    Catalog: Renders the catalog view for a specific category
+    Args:
+        number_of_items (data type: str): The category's name
+    Returns:
+        html
+    """
     categories=db.get_categories()
     items=db.get_items_of_category(category_name)
     return render_template('catalog.html',
@@ -173,6 +206,14 @@ def Catalog(category_name):
 
 @app.route('/catalog/<string:category_name>/<string:item_title>', methods=['GET', 'POST'])
 def Item(category_name,item_title):
+    """
+    Item: Renders the item view for a specific item
+    Args:
+        category_name (data type: str): The category's name
+        item_title (data type: str): The item's title
+    Returns:
+        html
+    """
     item=db.get_item(item_title)
     logged_in='username' in login_session
     authorized=('email' in login_session and item.user.email==login_session['email'])
@@ -183,6 +224,13 @@ def Item(category_name,item_title):
 
 @app.route('/catalog/<string:item_title>/edit', methods=['GET', 'POST'])
 def Edit(item_title):
+    """
+    Edit: Renders the form for editing or deleting a specific item
+    Args:
+        item_title (data type: str): The item's title
+    Returns:
+        html
+    """
     item=db.get_item(item_title)
     categories=db.get_categories()
     if request.method == 'GET':
@@ -204,6 +252,13 @@ def Edit(item_title):
 
 @app.route('/catalog/add', methods=['GET', 'POST'])
 def Add():
+    """
+    Add: Renders the form for adding a specific item
+    Args:
+        None
+    Returns:
+        html
+    """
     if 'email' in login_session:
         user_mail=login_session['email']
     else:
@@ -230,6 +285,13 @@ def Add():
 
 @app.route('/catalog/create_category', methods=['GET', 'POST'])
 def CreateCategory():
+    """
+    CreateCategory: Renders the form for creating a new category
+    Args:
+        None
+    Returns:
+        html
+    """
     if 'email' in login_session:
         user_mail=login_session['email']
     else:
@@ -247,6 +309,13 @@ def CreateCategory():
 
 @app.route('/catalog/<string:item_title>/delete', methods=['GET', 'POST'])
 def Delete(item_title):
+    """
+    Delete: deletes a specific Item object
+    Args:
+        item_title (data type: str): The item's title
+    Returns:
+        html
+    """
     item=db.get_item(item_title)
     if request.method == 'GET':
         return render_template('delete.html', 
@@ -258,6 +327,13 @@ def Delete(item_title):
 
 @app.route('/catalog/<string:category_name>/json')
 def CategoryJson(category_name):
+    """
+    CategoryJson: Returns a specific Category in json format
+    Args:
+        category_name (data type: str): The category's name
+    Returns:
+        json
+    """
     category=db.get_category(category_name)
     serialized_category = category.serialize
     items=db.get_items_of_category(category.name)
@@ -269,5 +345,13 @@ def CategoryJson(category_name):
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/json')
 def ItemJson(category_name,item_name):
+    """
+    ItemJson: Returns a specific Item in json format
+    Args:
+        category_name (data type: str): The category's name
+        item_name (data type: str): The item's name
+    Returns:
+        json
+    """
     item=db.get_item(item_name)
     return jsonify(item=item.serialize)
