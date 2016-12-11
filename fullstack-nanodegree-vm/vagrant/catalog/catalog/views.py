@@ -254,15 +254,17 @@ def Edit(item_title):
                                item=item,
                                route=url_for('Edit', item_title=item.title))
     else:
-        if request.form['title']:
-            item.text = request.form['title']
-        if request.form['description']:
-            item.description = request.form['description']
-        if request.form['category']:
-            category_name = request.form['category']
-            category = db.get_category(category_name)
-            item.category = category
-        db.add_item(item)
+        if ('email' in login_session and 
+            item.user.email == login_session['email']):
+            if request.form['title']:
+                item.text = request.form['title']
+            if request.form['description']:
+                item.description = request.form['description']
+            if request.form['category']:
+                category_name = request.form['category']
+                category = db.get_category(category_name)
+                item.category = category
+            db.add_item(item)
         return redirect(url_for('home'))
 
 
@@ -343,7 +345,9 @@ def Delete(item_title):
                                item=item,
                                logged_in='username' in login_session)
     else:
-        db.delete_item(item)
+        if ('email' in login_session and 
+            item.user.email == login_session['email']):
+            db.delete_item(item)
         return redirect(url_for('home'))
 
 
