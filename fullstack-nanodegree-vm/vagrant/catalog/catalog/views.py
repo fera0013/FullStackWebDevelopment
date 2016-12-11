@@ -271,7 +271,7 @@ def Edit(item_title):
 @app.route('/catalog/add', methods=['GET', 'POST'])
 def Add():
     """
-    Add: Renders the form for adding a specific item
+    Add: Renders the form for adding a new item
     Args:
         None
     Returns:
