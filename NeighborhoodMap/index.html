@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Neighborhood Map</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse sidebar navbar-fixed-top" role="navigation">
+    <div class="nav-side-menu">
+      <input id="search" type="text" placeholder="Search Location. Powered by Foursquare." data-bind="textInput: searchString" />
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+      <div class="menu-list">
+        <ul id="menu-content" class="menu-content collapse out" data-bind="foreach: filteredVenues">
+          <li><span data-bind="text: name,click: viewModel.markerClickHandler"></span></li>
+        </ul>
+      </div>
+    </div>
+  </nav> 
+  <div id="map"></div>
+  <!-- jQuery -->
+  <script src="js/jquery.js"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="js/bootstrap.min.js"></script>
+
+  <!-- Contains the Model and ViewModel -->
+  <script src="js/app.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+  <script src="js/sidebar.js"></script>
+
+  <!-- Google Maps API -->
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC80808d0bU8md5XcnNW4IvByEdShJ1RNo&callback=initMap">
+  </script>
+
+  <!-- Knockout framework -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+</body>
+
+</html>
