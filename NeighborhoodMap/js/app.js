@@ -46,14 +46,22 @@ var ViewModel = function() {
     var self = this;
     self.searchString = ko.observable('');
     self.venues = ko.observableArray([]);
-
     self.getVenues = ko.computed(function() {
-      $.get(fourSquareURL, function (result) {
-            for (var venue in result.response.venues){
-              self.venues.push(new Venue(result.response.venues[venue]));
-            }
-          });
+      $.ajax(fourSquareURL, {
+        dataType: 'json',
+        async: true,
+        type: 'GET'
+      })
+      .done(function(result){
+        for (var venue in result.response.venues)
+        {
+          self.venues.push(new Venue(result.response.venues[venue]));
+        }
+      })
+      .fail(function(){
+        alert("We are really sorry, but Foursquare was not responding this time. Try again, later!");
       });
+    });
 
     self.filteredVenues = ko.computed(function() {
       var filter = self.searchString().toLowerCase();
@@ -82,12 +90,12 @@ function initMap() {
     mapTypeControl: false,
     center: {lat:lat,lng:lng}
   });
-  infowindow = new google.maps.InfoWindow();
+  infowindow = new google.maps.InfoWindow();  
   viewModel = new ViewModel(); 
-  ko.applyBindings(viewModel);  
+  ko.applyBindings(viewModel);
 }
 
-
+//Event handler triggered by clicking on a marker or a link in the sidebar
 function markerClickHandler(){
   var marker = this;
   viewModel.venues().forEach(function(Venue){
@@ -101,3 +109,7 @@ function markerClickHandler(){
   infowindow.open(map, this);
 }
 
+function googleError()
+{
+   alert("We are really sorry, but Google Maps was not responding this time. Try again, later!");
+}
